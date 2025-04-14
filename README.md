@@ -103,27 +103,29 @@ Microsoft Documentation: [Azure IoT Operations prerequisites](https://learn.micr
  - [`K3s`](https://k3s.io/) Lightweight Kubernetes. Easy to install, half the memory, all in a binary of less than 100 MB.
  - [`python >=v3.10`](https://www.python.org/) Programming Language
  - [`Azure CLI`](https://learn.microsoft.com/en-us/cli/azure/) the Azure command-line interface.
- - [`Ansible`](https://www.ansible.com/) open source IT automation engine that automates provisioning and configuration of the solution.
 
 ### Cloud services requirements
 
  - Azure Subscription (with Contributor rights)
- - The solution will deploy the following resources:
-    - Resource Group
-    - Storage Account
-    - Schema Registry
-    - Event Hub
-    - Azure Open AI Service
-    - 2 Managed Identities
-    - _Optional_: Virtual Machine (if you want to test everything in Azure Cloud)
+    - The solution will deploy the following resources:
+        - Azure IoT Operations prerequisites
+            - Resource Group
+            - Storage Account
+            - Schema Registry
+            - 2 Managed Identities
+        - Data Streaming Ingestion
+            - Event Hub
+        - Factory Agent
+            - Azure Open AI Service
+        - _Optional_: Virtual Machine (if you want to test everything in Azure Cloud)
  - Microsoft Fabric Tenant (you can try it for free [here](https://www.microsoft.com/en-us/microsoft-fabric/getting-started?msockid=27cd43526f4e6b2a1fa857d06e486a3c))
 
 ## Solution build steps
 
 Deploy the solution in 3 steps!
 
-### 1. [Provision resources (Edge and Cloud)](./INSTALL-1.md)
-### 2. [Configure the solution (Cloud part)](./INSTALL-2.md)
+### 1. [Provision resources (Cloud & Edge)](./INSTALL-1.md)
+### 2. [Configure the solution (Microsoft Fabric)](./INSTALL-2.md)
 ### 3. [Deploy and use the Generative AI Factory Agent](./INSTALL-3.md)
 
 ## Demo
