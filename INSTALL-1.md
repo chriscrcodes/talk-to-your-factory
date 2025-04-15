@@ -60,20 +60,24 @@ You can choose between 2 options:
    - Use the [Azure Cloud Shell (**Bash**)](https://learn.microsoft.com/en-us/azure/cloud-shell/get-started/ephemeral?tabs=azurecli#start-cloud-shell)
    - Set Environment Variables for services to create in Azure:
      ```bash
+     prefix="ttyf"
+     random=$(tr -dc 'a-z' < /dev/urandom | fold -w 4 | head -n 1)$(date +%y%m%d)
      export TTYF_SUBSCRIPTION_ID="<YOUR_SUBSCRIPTION_ID>"
-     export TTYF_LOCATION="<YOUR_REGION>"
-     export TTYF_RESOURCE_GROUP="<YOUR_RESOURCE_GROUP>"
-     export TTYF_KEYVAULT_NAME="<YOUR_KEYVAULT_NAME>"
-     export TTYF_STORAGE_ACCOUNT_NAME="<YOUR_STORAGE_ACCOUNT_NAME>"
-     export TTYF_SCHEMA_REGISTRY_NAME="<YOUR_SCHEMA_REGISTRY_NAME>"
-     export TTYF_SCHEMA_REGISTRY_NAMESPACE="<YOUR_SCHEMA_REGISTRY_NAMESPACE>"
-     export TTYF_EVENTHUB_NAMESPACE="<YOUR_EVENTHUB_NAMESPACE>"
-     export TTYF_EVENTHUB_NAME="<YOUR_EVENTHUB_NAME>"
-     export TTYF_AZURE_OPENAI_NAME="<YOUR_AZURE_OPENAI_NAME>"
-     export TTYF_AIO_SERVICE_PRINCIPAL="<YOUR_AIO_SERVICE_PRINCIPAL_NAME>"
-     export TTYF_AIO_MI_SECRETS="<YOUR_AIO_MANAGED_IDENTITY_SECRETS_NAME>"
-     export TTYF_AIO_MI_COMPONENTS="<YOUR_AIO_MANAGED_IDENTITY_COMPONENTS_NAME>"
-     export TTYF_FACTORY_AGENT_SERVICE_PRINCIPAL="<YOUR_FACTORY_AGENT_SERVICE_PRINCIPAL_NAME>"
+     export TTYF_LOCATION="<YOUR_LOCATION>"
+     export TTYF_RESOURCE_GROUP="${prefix}-rg"
+     export TTYF_KEYVAULT_NAME="${prefix}${random}kv"
+     export TTYF_STORAGE_ACCOUNT_NAME="${prefix}${random}sa"     
+     export TTYF_SCHEMA_REGISTRY_NAMESPACE="${prefix}${random}srns"
+     export TTYF_SCHEMA_REGISTRY_NAME="aio"
+     export TTYF_AIO_CLUSTER_NAME="${prefix}${random}aiocl"
+     export TTYF_EVENTHUB_NAMESPACE="${prefix}${random}evhns"
+     export TTYF_EVENTHUB_NAME="aio"
+     export TTYF_AZURE_OPENAI_NAME="${prefix}${random}aoai"
+     export TTYF_AZURE_OPENAI_DEPLOYMENT_NAME="talk-to-your-factory"
+     export TTYF_AIO_SERVICE_PRINCIPAL="${prefix}-aio-sp"
+     export TTYF_AIO_MI_SECRETS="aio-secrets"
+     export TTYF_AIO_MI_COMPONENTS="aio-components"     
+     export TTYF_FACTORY_AGENT_SERVICE_PRINCIPAL="${prefix}-agent-sp"
      ```
    - Select Azure Subscription:
      ```bash
@@ -147,7 +151,7 @@ You can choose between 2 options:
      ```
    - Deploy LLM in Azure OpenAI:
      ```bash
-     az cognitiveservices account deployment create --resource-group $TTYF_RESOURCE_GROUP --name $TTYF_AZURE_OPENAI_NAME --deployment-name "talk-to-your-factory" --model-name "gpt-4o-mini" --model-version "2024-07-18" --model-format "OpenAI" --sku-capacity "250" --sku-name "GlobalStandard"
+     az cognitiveservices account deployment create --resource-group $TTYF_RESOURCE_GROUP --name $TTYF_AZURE_OPENAI_NAME --deployment-name $TTYF_AZURE_OPENAI_DEPLOYMENT_NAME --model-name "gpt-4o-mini" --model-version "2024-07-18" --model-format "OpenAI" --sku-capacity "250" --sku-name "GlobalStandard"
      ```
    - Retrieve the Azure OpenAI resource keys and create 1 variable:
      ```bash
@@ -228,7 +232,7 @@ You should now see the following resources in Azure (names may vary depending on
 ### Option 2 - Manual installation
 - Prepare a K3s Kubernetes Cluster on Ubuntu
 - Login and execute the following commands on your Ubuntu Machine
-- Retrieve the environment following variables you kept a note in [Cloud Part](#display-the-variables-you-created-and-keep-a-note-of-them-for-future-use), and paste them in the terminal (example below):
+- Retrieve the environment following variables you kept a note of in [Cloud Part](#display-the-variables-you-created-and-keep-a-note-of-them-for-future-use) (result of printenv command), and paste them in the terminal (example below):
     ```bash
     TTYF_SCHEMA_REGISTRY_NAMESPACE=****
     TTYF_FACTORY_AGENT_SERVICE_PRINCIPAL=****
@@ -236,9 +240,6 @@ You should now see the following resources in Azure (names may vary depending on
     TTYF_AIO_MI_COMPONENTS=****
     ...
     ```
-- Create an environment variable to define the name of the cluster to connect to Azure Arc:
-  ```bash
-  export TTYF_AIO_CLUSTER_NAME="<YOUR_CLUSTER_NAME>"
 - Install `curl` and `nano`:
      ```bash
      sudo apt update
@@ -338,8 +339,19 @@ You should now see the following resources in Azure (names may vary depending on
       ```bash
       az iot ops init --subscription $TTYF_SUBSCRIPTION_ID --cluster $TTYF_AIO_CLUSTER_NAME --resource-group $TTYF_RESOURCE_GROUP
       ```
+   - Deploy Azure IoT Operations:
+       ```bash
+       az iot ops create --add-insecure-listener --kubernetes-distro K3s --name $TTYF_AIO_CLUSTER_NAME --cluster $TTYF_AIO_CLUSTER_NAME --resource-group $TTYF_RESOURCE_GROUP --sr-resource-id /subscriptions/$TTYF_SUBSCRIPTION_ID/resourceGroups/$TTYF_RESOURCE_GROUP/providers/Microsoft.DeviceRegistry/schemaRegistries/$TTYF_SCHEMA_REGISTRY_NAME --broker-frontend-replicas 1 --broker-frontend-workers 1 --broker-backend-part 1 --broker-backend-workers 1 --broker-backend-rf 2 --broker-mem-profile Low
+       ``` 
+  - Confirm Azure IoT Operations installation  
+      - After the deployment is complete, use `az iot ops check` to evaluate IoT Operations service deployment for health, configuration, and usability. The check command can help you find problems in your deployment and configuration.  
+        > **Note**: confirm post deployment checks are green.   
+        
+        ```bash
+        az iot ops check
+        ```
 
-### Resources after installation
+### Resources after provisioning
   - You should now see the following new resources in your Azure Resource Group (names may vary depending on the variables you defined):
     ![azure-deployed-3](./artifacts/media/azure-deployed-3.png "azure-deployed-3")
   

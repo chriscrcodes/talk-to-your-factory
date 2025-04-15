@@ -8,7 +8,7 @@
                 "yes",
                 "no"
             ],
-            "defaultValue": "yes",
+            "defaultValue": "no",
             "metadata": {
                 "description": "Connect to VM via Bastion Host."
             }
