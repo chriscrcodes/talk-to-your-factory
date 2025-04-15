@@ -8,7 +8,7 @@
 
 ## Create an environment variable file
 - Rename the file [`.env_template`](./artifacts/factory-agent/.env_template) to `.env`
-- Retrieve the environment following variables you defined in [Part 1 - Provision resources (Edge and Cloud)](./INSTALL-1.md) ==> file `variables.yaml`:
+- Retrieve the environment following variables you defined in [Part 1 - Provision resources (Cloud & Edge)](./INSTALL-1.md) ==> file `variables.yaml`:
     ```bash
     FACTORY_AGENT_SP_APPID
     FACTORY_AGENT_SP_SECRET
@@ -23,9 +23,9 @@
     ```bash
     AZURE_OPENAI_ENDPOINT           = < Azure AI Foundry Portal => Target URI >
     AZURE_OPENAI_API_KEY            = < Azure AI Foundry Portal => Key >
-    AZURE_OPENAI_DEPLOYMENT_NAME    = "smart-factory"
-    AZURE_OPENAI_MODEL_NAME         = "gpt-4o"
-    AZURE_OPENAI_DEPLOYMENT_VERSION = "2024-08-06"
+    AZURE_OPENAI_DEPLOYMENT_NAME    = "talk-to-your-factory"
+    AZURE_OPENAI_MODEL_NAME         = "gpt-4o-mini"
+    AZURE_OPENAI_DEPLOYMENT_VERSION = "2024-07-18"
 
     AZURE_AD_TENANT_ID              = < variables.yaml => TENANT >
     KUSTO_CLUSTER                   = < Microsoft Fabric => Query URI >
