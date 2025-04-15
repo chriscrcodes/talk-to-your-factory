@@ -1,8 +1,8 @@
 # Part 1 - Provision resources (Cloud & Edge)
 
-## Prepare and provision Cloud platform
+## Prepare and provision Cloud Platform
 You can choose between 2 options:  
-- [Option 1](#option-1---automated-installation) : automated installation with Ansible (Infra as Code)
+- [Option 1](#option-1---automated-installation) : automated installation with `Ansible` (Infra as Code)
 - [Option 2](#option-2---manual-installation) : manual installation using Azure CLI
 
 ### Option 1 - Automated installation
@@ -62,8 +62,10 @@ You can choose between 2 options:
      ```bash
      prefix="ttyf"
      random=$(tr -dc 'a-z' < /dev/urandom | fold -w 4 | head -n 1)$(date +%y%m%d)
+
      export TTYF_SUBSCRIPTION_ID="<YOUR_SUBSCRIPTION_ID>"
      export TTYF_LOCATION="<YOUR_LOCATION>"
+
      export TTYF_RESOURCE_GROUP="${prefix}-rg"
      export TTYF_KEYVAULT_NAME="${prefix}${random}kv"
      export TTYF_STORAGE_ACCOUNT_NAME="${prefix}${random}sa"     
@@ -83,6 +85,7 @@ You can choose between 2 options:
      ```bash
      az account set --subscription $TTYF_SUBSCRIPTION_ID
      ```
+#### Azure IoT Operations prerequisites
    - Register required Resource Providers (execute this step only once per subscription):
      ```bash
       az provider register -n "Microsoft.ExtendedLocation"
@@ -92,7 +95,6 @@ You can choose between 2 options:
       az provider register -n "Microsoft.DeviceRegistry"
       az provider register -n "Microsoft.SecretSyncController"
      ```
-#### Azure IoT Operations prerequisites
    - Install Azure CLI extension for Azure IoT Operations:
      ```bash
       az extension add --upgrade --name azure-iot-ops
@@ -123,7 +125,7 @@ You can choose between 2 options:
      ```
    - Assign 'Key Vault Secrets Officer' role to Managed Identity for Azure IoT Operations (secrets):
      ```bash
-     az role assignment create --role "Key Vault Secrets Officer" --assignee $(az identity show --name "aio_secrets" --resource-group $TTYF_RESOURCE_GROUP --query principalId -o tsv) --scope $(az keyvault show --name $TTYF_KEYVAULT_NAME --resource-group $TTYF_RESOURCE_GROUP --query id -o tsv)
+     az role assignment create --role "Key Vault Secrets Officer" --assignee $(az identity show --name $TTYF_AIO_MI_SECRETS --resource-group $TTYF_RESOURCE_GROUP --query principalId -o tsv) --scope $(az keyvault show --name $TTYF_KEYVAULT_NAME --resource-group $TTYF_RESOURCE_GROUP --query id -o tsv)
      ```  
 #### Data Streaming Ingestion prerequisites
    - Create an Event Hub namespace:
@@ -180,14 +182,14 @@ You can choose between 2 options:
      export TTYF_ARC_OBJECT_ID=$(az ad sp show --id bc313c14-388c-4e7d-a58e-70017303ee3b --query id --output tsv)
      ```
       
-#### Display the variables you created and keep a note of them for future use
+#### Display the variables you created and keep a note of them for future use (24 variables in total)
 ```bash
 printenv | grep TTYF_
 ```
 
-### Resources after provisioning
+#### Resources after provisioning
 You should now see the following resources in Azure (names may vary depending on the variables you defined):  
-   - Resource Group
+   - Resource Group  
     ![azure-deployed-1](./artifacts/media/azure-deployed-1.png "azure-deployed-1")
    - Entra ID  
     ![azure-deployed-1-1](./artifacts/media/azure-deployed-1-1.png "azure-deployed-1-1")
@@ -202,7 +204,7 @@ You should now see the following resources in Azure (names may vary depending on
 
   - **Operating System**: the solution requires a Linux-based system, specifically a VM or physical machine running `Linux Ubuntu 24.04`. This system will perform as an Edge Cluster, handling queries directly from the production line and interfacing with other operational systems.
 
-- Option A (Virtual Machine in Azure Cloud)
+### Option A (Virtual Machine in Azure Cloud)
    - If you want to use a Virtual Machine in Azure, you can deploy it using the Deploy button below:  
       [![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fchriscrcodes%2Fsmart-factory%2Frefs%2Fheads%2Fmain%2Fartifacts%2Ftemplates%2Fdeploy%2Fazure-vm.json)  
         ![azure-deployed-2](./artifacts/media/azure-deployed-2.png "azure-deployed-2")
@@ -211,8 +213,12 @@ You should now see the following resources in Azure (names may vary depending on
    - You should now see the following new resources in your Azure Resource Group (names may vary depending on the variables you defined):
     ![azure-deployed-2-2](./artifacts/media/azure-deployed-2-2.png "azure-deployed-2-2")
 
-- Option B (your own Industrial PC or Virtual Machine)
+### Option B (your own Industrial PC or Virtual Machine)
   - Install `Linux Ubuntu 24.04`
+
+You can choose between 2 options:  
+- [Option 1](#option-1---automated-installation-1) : automated installation with `Ansible` (Infra as Code)
+- [Option 2](#option-2---manual-installation-1) : manual installation using Azure CLI
 
 ### Option 1 - Automated installation
 - Copy the file `variables.yaml` to your Edge Cluster (in your home user directory)
@@ -230,14 +236,14 @@ You should now see the following resources in Azure (names may vary depending on
       ![edge-deployed-2](./artifacts/media/edge-deployed-2.png "edge-deployed-2")
 
 ### Option 2 - Manual installation
-- Prepare a K3s Kubernetes Cluster on Ubuntu
 - Login and execute the following commands on your Ubuntu Machine
-- Retrieve the environment following variables you kept a note of in [Cloud Part](#display-the-variables-you-created-and-keep-a-note-of-them-for-future-use) (result of printenv command), and paste them in the terminal (example below):
+- Retrieve the following environment variables you noted earlier in [Cloud Part](#display-the-variables-you-created-and-keep-a-note-of-them-for-future-use) (result of `printenv` command), and paste them in the terminal (example below):
     ```bash
-    TTYF_SCHEMA_REGISTRY_NAMESPACE=****
-    TTYF_FACTORY_AGENT_SERVICE_PRINCIPAL=****
-    TTYF_SCHEMA_REGISTRY_NAME=****
-    TTYF_AIO_MI_COMPONENTS=****
+      TTYF_SCHEMA_REGISTRY_NAMESPACE=****
+      TTYF_FACTORY_AGENT_SERVICE_PRINCIPAL=****
+      TTYF_ARC_OBJECT_ID=d****
+      TTYF_SCHEMA_REGISTRY_NAME=****
+      TTYF_AIO_MI_COMPONENTS=****
     ...
     ```
 - Install `curl` and `nano`:
@@ -275,13 +281,6 @@ You should now see the following resources in Azure (names may vary depending on
   ```bash
   kubectl get node
   ```
-- Install k9s
-    ```bash
-    sudo snap install k9s
-    alias k9s=/snap/k9s/current/bin/k9s
-    echo "alias k9s=/snap/k9s/current/bin/k9s" >> ~/.bashrc
-    ```
-    > Note: you can browse pods using the following command: k9s -n azure-iot-operations
 - Install Azure prerequisites
   - Install `Azure CLI`:
     ```bash
@@ -354,13 +353,73 @@ You should now see the following resources in Azure (names may vary depending on
 ### Resources after provisioning
   - You should now see the following new resources in your Azure Resource Group (names may vary depending on the variables you defined):
     ![azure-deployed-3](./artifacts/media/azure-deployed-3.png "azure-deployed-3")
-  
-## Confirm Factory MQTT Simulator is running on the Edge Cluster
-  - Execute the playbook to deploy demo components
-      ```bash
-      curl -O https://raw.githubusercontent.com/chriscrcodes/talk-to-your-factory/main/artifacts/templates/deploy/3_edge-deploy_demo_components.yaml
-      ansible-playbook 3_edge-deploy_demo_components.yaml
+
+## Enable Data Streaming Ingestion
+  - Azure - Authorize the cluster to connect to the Event Hub
+     - Locate the Azure Event Hub name space you created in [Azure Portal](https://portal.azure.com/)
+     - `Access Control (IAM)` > `Add` > `Add role assignment`
+     - `Azure Event Hubs Data Sender` > `Next`
+     - Assign access to `User, group, or service principal`
+     - `Select Members` > type `azure-iot-operations-` to locate the `azure-iot-operations` extension  
+       (For example: `/subscriptions/xxx/resourceGroups/xxx/providers/Microsoft.Kubernetes/connectedClusters/xxx/providers/Microsoft.KubernetesConfiguration/extensions/azure-iot-operations-xxx`)
+
+## Azure IoT Operations - Create Data flows
+  - Download the [Distributed State Store](https://learn.microsoft.com/en-us/azure/iot-operations/create-edge-apps/concept-about-state-store-protocol) tool
+       ```bash
+       curl -O https://raw.githubusercontent.com/chriscrcodes/talk-to-your-factory/main/artifacts/templates/azure-iot-operations/dataflows/dss/dss_set
+       ``` 
+  - Set the file as executable
+       ```bash
+       chmod +x ./dss_set
+       ```
+  - Download the Operators Dataset
+       ```bash
+       curl -O https://raw.githubusercontent.com/chriscrcodes/talk-to-your-factory/main/artifacts/templates/azure-iot-operations/dataflows/dss/operators.json
+       ``` 
+  - Download the Products Dataset
+       ```bash
+       curl -O https://raw.githubusercontent.com/chriscrcodes/talk-to-your-factory/main/artifacts/templates/azure-iot-operations/dataflows/dss/products.json
+       ``` 
+  - Import the operators dataset in the Distributed State Store
+       ```bash
+       ./dss_set --key operators --file "operators.json" --address localhost
+       ```
+  - Import the products dataset in the Distributed State Store
+       ```bash
+       ./dss_set --key products --file "products.json" --address localhost
+       ```
+  - Download the data flow  
+     ```bash
+     curl -O https://raw.githubusercontent.com/chriscrcodes/talk-to-your-factory/main/artifacts/templates/azure-iot-operations/dataflows/silver-to-cloud.yaml
+    ```
+  - Modify file with the name of the event hub name space created in [Step 1](#prepare-and-provision-cloud-platform) (`EVENTHUB_NAMESPACE` variable):
+     ```bash
+     sed -i 's/<EVENTHUB_NAMESPACE>/'"${EVENTHUB_NAMESPACE}"'/' silver-to-cloud.yaml
+    ```
+  - Modify file with the name of the event hub name created in [Step 1](#prepare-and-provision-cloud-platform) (`EVENTHUB_NAME` variable):
+     ```bash
+     sed -i 's/<EVENTHUB>/'"${EVENTHUB_NAME}"'/' silver-to-cloud.yaml
       ```
+  - Deploy the cloud connector
+     ```bash
+     kubectl apply -f silver-to-cloud.yaml
+     ```
+  > **Note**: if you encounter an error "WARN[0000] Unable to read /etc/rancher/k3s/k3s.yaml", execute the following command:
+    ```
+    sudo chmod 644 /etc/rancher/k3s/k3s.yaml
+    ```
+ - Deploy the data flow (enrichment: bronze to silver)
+   ```bash
+   kubectl apply -f https://raw.githubusercontent.com/chriscrcodes/talk-to-your-factory/main/artifacts/templates/azure-iot-operations/dataflows/bronze-to-silver.yaml
+   ```
+
+## Deploy the MQTT Factory Data Simulator
+  - Login and execute the following commands on your Ubuntu Machine
+  - Factory Simulator
+    ```bash
+    kubectl apply -f https://raw.githubusercontent.com/chriscrcodes/talk-to-your-factory/main/artifacts/templates/k3s/pods/simulator/configuration.yaml
+    kubectl apply -f https://raw.githubusercontent.com/chriscrcodes/talk-to-your-factory/main/artifacts/templates/k3s/pods/simulator/deployment.yaml
+    ```
   - Deploy MQTT Client
     ```bash
     kubectl apply -f https://raw.githubusercontent.com/chriscrcodes/talk-to-your-factory/main/artifacts/templates/k3s/pods/mqtt-client/pod.yaml
@@ -381,7 +440,7 @@ You should now see the following resources in Azure (names may vary depending on
 
 ## Confirm Data is flowing from Edge (Azure IoT Operations) to Cloud (Azure Event Hub)
   - Locate the Azure Event Hub Namespace you created in [Azure Portal](https://portal.azure.com/)
-  - Data Explorer (preview) > select the event hub you created in [Step 1](#step-1---provision-azure-resources) (`EVENTHUB_NAME` variable)
+  - Data Explorer > select the event hub you created in [Step 1](#prepare-and-provision-cloud-platform) (`EVENTHUB_NAME` variable)
   - Click on `View events` and select a message on the right to confirm data flow is operational
   ![evh-messages](./artifacts/media/evh-messages.png "evh-messages")
 
