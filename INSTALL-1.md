@@ -182,7 +182,7 @@ You can choose between 2 options:
      export TTYF_ARC_OBJECT_ID=$(az ad sp show --id bc313c14-388c-4e7d-a58e-70017303ee3b --query id --output tsv)
      ```
       
-#### Display the variables you created and keep a note of them for future use (24 variables in total)
+#### Display the variables you created and keep a note of them for future use
 ```bash
 printenv | grep TTYF_
 ```

@@ -107,7 +107,7 @@
 - Select the query portion and click `Run`
 
 ## Authorize the Factory Agent to query the database
-   - Retrieve the environment following variables you defined in [Part 1 - Provision resources (Edge and Cloud)](./INSTALL-1.md) ==> file `variables.yaml`:
+   - Retrieve the environment following variables you defined in [Part 1 - Provision resources (Cloud & Edge)](./INSTALL-1.md) ==> file `variables.yaml`:
      ```bash
      FACTORY_AGENT_SP_APPID
      TENANT
@@ -119,7 +119,7 @@
 - Select the query portion and click `Run`
 
 ## Authorize the Factory Agent to query the table
-   - Retrieve the environment following variables you defined in [Part 1 - Provision resources (Edge and Cloud)](./INSTALL-1.md) ==> file `variables.yaml`:
+   - Retrieve the environment following variables you defined in [Part 1 - Provision resources (Cloud & Edge)](./INSTALL-1.md) ==> file `variables.yaml`:
      ```bash
      FACTORY_AGENT_SP_APPID
      TENANT
@@ -136,7 +136,7 @@
     - `New` > `Eventstream` > choose the name `aio_silver` and click `Create`
     - Click on `Add source` > `External sources` > `Azure Event Hubs` > `Connect`
     - Create new connection
-    - Retrieve variables created in [Part 1 - Provision resources (Edge and Cloud)](./INSTALL-1.md) ==> file `variables.yaml`
+    - Retrieve variables created in [Part 1 - Provision resources (Cloud & Edge)](./INSTALL-1.md) ==> file `variables.yaml`
     - `Event Hub namespace` > `EVENTHUB_NAMESPACE` variable
     - `Event Hub` > `EVENTHUB_NAME` `
     - Choose a connection name
