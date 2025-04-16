@@ -1,10 +1,9 @@
-# Part 4 - Deploy and use the Generative AI Factory Agent
+# Part 3 - Deploy and use the Generative AI Factory Agent
 
-## Deploy a Large Language Model (LLM) in Azure Open AI
-   - [Deploy a base model](https://learn.microsoft.com/en-us/azure/ai-services/openai/how-to/create-resource?pivots=web-portal#deploy-a-model):
-      - Login to [Azure AI Foundry Portal](https://ai.azure.com/)
-      - Select your deployment in `Shared resources` > `Deployments` > `smart-factory`
-      - Copy the following information in `Endpoint` section: `Target URI` and `Key`. We will need them in the next section.
+## Get Large Language Model (LLM) information from Azure AI Foundry Portal
+- Login to [Azure AI Foundry Portal](https://ai.azure.com/)
+- Select your deployment in `Shared resources` > `Deployments` > `talk-to-your-factory`
+- Copy the following information in `Endpoint` section: `Target URI` and `Key`. We will need them in the next section.
 
 ## Create an environment variable file
 - Rename the file [`.env_template`](./artifacts/factory-agent/.env_template) to `.env`
