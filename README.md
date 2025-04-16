@@ -120,14 +120,6 @@ Microsoft Documentation: [Azure IoT Operations prerequisites](https://learn.micr
         - _Optional_: Virtual Machine (if you want to test everything in Azure Cloud)
  - Microsoft Fabric Tenant (you can try it for free [here](https://www.microsoft.com/en-us/microsoft-fabric/getting-started?msockid=27cd43526f4e6b2a1fa857d06e486a3c))
 
-## Solution build steps
-
-Deploy the solution in 3 steps!
-
-### 1. [Provision resources (Cloud & Edge)](./INSTALL-1.md)
-### 2. [Configure the solution (Microsoft Fabric)](./INSTALL-2.md)
-### 3. [Deploy and use the Generative AI Factory Agent](./INSTALL-3.md)
-
 ## Demo
 
 ![Factory Agent User Interface](./artifacts/media/demo-video.gif "Factory Agent User Interface")
@@ -138,3 +130,14 @@ Deploy the solution in 3 steps!
   [![Video on the IoT Show](https://img.youtube.com/vi/-AxWwJU_G_U/hqdefault.jpg)](https://www.youtube.com/embed/-AxWwJU_G_U)  
 - **Azure Arc Jumpstart** hosted by `Lior Kamrat`  
   [![Video on the Arc Jumpstart Show](https://img.youtube.com/vi/cN6urmB_7jY/hqdefault.jpg)](https://www.youtube.com/embed/cN6urmB_7jY)
+
+## Solution build steps
+
+Deploy the solution in 3 steps!
+
+### 1. [Provision resources (Cloud & Edge)](./INSTALL-1.md)
+### 2. [Configure the solution (Microsoft Fabric)](./INSTALL-2.md)
+### 3. [Deploy and use the Generative AI Factory Agent](./INSTALL-3.md)
+
+### Additional resources
+- [Uninstall the solution](./UNINSTALL.md)

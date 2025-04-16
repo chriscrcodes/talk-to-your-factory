@@ -1,16 +1,24 @@
 # Uninstall Procedure
 
-## 1-Edge Part
-  - From the Edge Cluster, execute the following command:
+## 1-Edge unprovisioning
+  - From the Edge Cluster, execute the following commands:
     ```bash
-    curl -O https://raw.githubusercontent.com/chriscrcodes/talk-to-your-factory/main/artifacts/templates/deploy/4_edge-unprovision.yaml
-    ansible-playbook 4_edge-unprovision.yaml
+      az account set --subscription $TTYF_SUBSCRIPTION_ID
+      az iot ops delete --yes --name $TTYF_AIO_CLUSTER_NAME --resource-group $TTYF_RESOURCE_GROUP --include-deps
+      az connectedk8s delete --yes --name $TTYF_AIO_CLUSTER_NAME --resource-group $TTYF_RESOURCE_GROUP      
+      az logout
+      /usr/local/bin/k3s-uninstall.sh
+      rm -r ~/.kube
     ```
-    ![edge-uninstall](./artifacts/media/edge-uninstall.png "edge-uninstall")
-## 2-Cloud Part
-  - From Azure Portal > Azure Cloud Shell, upload the files `variables.yaml` (from your Edge Cluster) and [`5_cloud-unprovision.yaml`](./artifacts/templates/deploy/5_cloud-unprovision.yaml) via `Manage files` > `Upload`.
-  - Execute the following command:
-    ```bash
-    ansible-playbook 5_cloud-unprovision.yaml
-    ```
-    ![cloud-uninstall](./artifacts/media/cloud-uninstall.png "cloud-uninstall")
+
+## 2-Cloud unprovisioning
+   - Open a browser and navigate to the [Azure Portal](https://portal.azure.com/)
+   - Use the [Azure Cloud Shell (**Bash**)](https://learn.microsoft.com/en-us/azure/cloud-shell/get-started/ephemeral?tabs=azurecli#start-cloud-shell)
+   - Execute the following commands in Azure Cloud Shell (Bash):
+      ```bash
+      az group delete --resource-group $TTYF_RESOURCE_GROUP --yes
+      az keyvault purge --no-wait --name $TTYF_KEYVAULT_NAME --location $TTYF_LOCATION
+      az cognitiveservices account purge --name $TTYF_AZURE_OPENAI_NAME --resource-group $TTYF_RESOURCE_GROUP --location "swedencentral"
+      az ad app delete --id $TTYF_FACTORY_AGENT_SP_APPID      
+      az ad app delete --id $TTYF_AIO_SP_APPID
+      ```

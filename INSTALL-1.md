@@ -58,14 +58,14 @@ You can choose between 2 options:
 ### Option 2 - Manual installation
    - Open a browser and navigate to the [Azure Portal](https://portal.azure.com/)
    - Use the [Azure Cloud Shell (**Bash**)](https://learn.microsoft.com/en-us/azure/cloud-shell/get-started/ephemeral?tabs=azurecli#start-cloud-shell)
+   - Execute the following commands in Azure Cloud Shell (Bash):
    - Set Environment Variables for services to create in Azure:
      ```bash
-     prefix="ttyf"
-     random=$(tr -dc 'a-z' < /dev/urandom | fold -w 4 | head -n 1)$(date +%y%m%d)
-
      export TTYF_SUBSCRIPTION_ID="<YOUR_SUBSCRIPTION_ID>"
      export TTYF_LOCATION="<YOUR_LOCATION>"
 
+     prefix="ttyf"
+     random=$(tr -dc 'a-z' < /dev/urandom | fold -w 4 | head -n 1)$(date +%y%m%d)
      export TTYF_RESOURCE_GROUP="${prefix}-rg"
      export TTYF_KEYVAULT_NAME="${prefix}${random}kv"
      export TTYF_STORAGE_ACCOUNT_NAME="${prefix}${random}sa"     
@@ -154,10 +154,6 @@ You can choose between 2 options:
    - Deploy LLM in Azure OpenAI:
      ```bash
      az cognitiveservices account deployment create --resource-group $TTYF_RESOURCE_GROUP --name $TTYF_AZURE_OPENAI_NAME --deployment-name $TTYF_AZURE_OPENAI_DEPLOYMENT_NAME --model-name "gpt-4o-mini" --model-version "2024-07-18" --model-format "OpenAI" --sku-capacity "250" --sku-name "GlobalStandard"
-     ```
-   - Retrieve the Azure OpenAI resource keys and create 1 variable:
-     ```bash
-     export TTYF_AZURE_OPENAI_KEY=$(az cognitiveservices account keys list --name $TTYF_AZURE_OPENAI_NAME --resource-group $TTYF_RESOURCE_GROUP --query key1 --output tsv)
      ```
    - Create a service principal (service account) for the Factory Assistant:
      ```bash
