@@ -311,13 +311,13 @@ You can choose between 2 options:
      ```
    - Get the cluster's issuer URL:
       ```bash
-     OIDC_ISSUER_PROFILE=$(az connectedk8s show --resource-group $TTYF_RESOURCE_GROUP --name $TTYF_AIO_CLUSTER_NAME --query oidcIssuerProfile.issuerUrl --output tsv)
-     sudo tee -a /etc/rancher/k3s/config.yaml <<EOF
+      OIDC_ISSUER_PROFILE=$(az connectedk8s show --resource-group $TTYF_RESOURCE_GROUP --name $TTYF_AIO_CLUSTER_NAME --query oidcIssuerProfile.issuerUrl --output tsv)
+      sudo tee -a /etc/rancher/k3s/config.yaml <<EOF
       kube-apiserver-arg:
         - service-account-issuer=$OIDC_ISSUER_PROFILE
         - service-account-max-token-expiration=24h
       EOF
-     ```
+      ```
    - Enable Custom Location support:
      ```bash
      az connectedk8s enable-features --name $TTYF_AIO_CLUSTER_NAME --resource-group $TTYF_RESOURCE_GROUP --custom-locations-oid $TTYF_ARC_OBJECT_ID --features cluster-connect custom-locations
