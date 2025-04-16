@@ -305,7 +305,7 @@ You can choose between 2 options:
      ```bash
      az account set --subscription $TTYF_SUBSCRIPTION_ID
      ```
-  - Connect Kubernetes Cluster to Azure via Azure Arc:
+   - Connect Kubernetes Cluster to Azure via Azure Arc:
      ```bash
      az connectedk8s connect --name $TTYF_AIO_CLUSTER_NAME --location $TTYF_LOCATION --resource-group $TTYF_RESOURCE_GROUP --subscription $TTYF_SUBSCRIPTION_ID --enable-oidc-issuer --enable-workload-identity --disable-auto-upgrade
      ```
