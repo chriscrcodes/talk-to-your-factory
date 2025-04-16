@@ -16,6 +16,7 @@
    - Use the [Azure Cloud Shell (**Bash**)](https://learn.microsoft.com/en-us/azure/cloud-shell/get-started/ephemeral?tabs=azurecli#start-cloud-shell)
    - Execute the following commands in Azure Cloud Shell (Bash):
       ```bash
+      az account set --subscription $TTYF_SUBSCRIPTION_ID
       az group delete --resource-group $TTYF_RESOURCE_GROUP --yes
       az keyvault purge --no-wait --name $TTYF_KEYVAULT_NAME --location $TTYF_LOCATION
       az cognitiveservices account purge --name $TTYF_AZURE_OPENAI_NAME --resource-group $TTYF_RESOURCE_GROUP --location "swedencentral"
