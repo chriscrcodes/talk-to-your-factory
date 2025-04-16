@@ -113,6 +113,7 @@ Microsoft Documentation: [Azure IoT Operations prerequisites](https://learn.micr
             - Storage Account
             - Schema Registry
             - 2 Managed Identities
+            - 2 App Registrations (Service Principal for Edge Gateway & Factory Agent)
         - Data Streaming Ingestion
             - Event Hub
         - Factory Agent
